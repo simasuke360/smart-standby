@@ -1,14 +1,17 @@
 {
-  "id": "./",
-  "name": "Standby — スマホ置き時計",
+  "name": "Standby Clock",
   "short_name": "Standby",
-  "description": "大きな時計とスワイプ式アラーム一覧を備えたStandBy風PWA",
-  "lang": "ja",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#080b12",
   "orientation": "any",
-  "background_color": "#05070d",
-  "theme_color": "#05070d",
-  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
