@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Standby">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Standby</title>
+<style>
+:root{color-scheme:dark;--accent:#8ebdff;--text:#f5f7fc;--muted:#98a5bb;--panel:rgba(24,31,45,.82);--stroke:rgba(255,255,255,.11)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#05070d;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{height:100dvh;overflow:hidden}
+button,input,select{font:inherit}button{color:inherit;cursor:pointer}
+.app{position:relative;height:100dvh;overflow:hidden;isolation:isolate;padding:env(safe-area-inset-top) 22px env(safe-area-inset-bottom);display:flex;flex-direction:column}
+.bg{position:absolute;inset:-10%;z-index:-2;background:radial-gradient(ellipse at 22% 24%,#122b50 0,transparent 38%),radial-gradient(ellipse at 83% 77%,#201d4d 0,transparent 40%),linear-gradient(150deg,#03050a,#0a1221 60%,#05070d);transition:background .4s}
+.bg:before{content:"";position:absolute;width:115vw;height:75vh;left:-35vw;top:33%;border:1px solid #4f8fe955;border-radius:50%;transform:rotate(-28deg);box-shadow:0 0 50px #3179e222,inset 0 0 35px #3179e211}
+.bg:after{content:"";position:absolute;width:120vw;height:65vh;right:-45vw;top:4%;border:1px solid #ffffff12;border-radius:50%;transform:rotate(-30deg)}
+.top{height:54px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.date{font-size:14px;color:#d1d8e6;letter-spacing:.01em}
+.status{font-size:12px;color:#c9d4e5;display:flex;gap:6px;align-items:center}
+.status .bolt{color:#70d5a4}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;touch-action:pan-y;user-select:none}
+.clock{font-size:clamp(78px,22vw,142px);font-weight:250;letter-spacing:-.085em;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;background:linear-gradient(180deg,#fff 0%,#d9e7ff 55%,#8bbaff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 8px 50px #4b86ff12}
+.seconds{font-size:.24em;letter-spacing:-.02em;vertical-align:top;margin:12px 0 0 8px;display:inline-block;color:#8ebdff}
+.greeting{font-size:14px;color:#b2bfd4;margin-top:23px;letter-spacing:.015em}
+.hint{position:absolute;bottom:21px;display:flex;flex-direction:column;align-items:center;gap:8px;color:#8290a8;font-size:11px;letter-spacing:.04em;animation:bob 2.3s ease-in-out infinite}
+.chevron{width:22px;height:22px;border:1px solid #ffffff2c;border-radius:50%;display:grid;place-items:center;color:#d2def3;font-size:13px}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(4px);opacity:1}}
+.fabrow{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;align-items:center}
+.round{width:48px;height:48px;border-radius:50%;border:1px solid #ffffff18;background:#ffffff0b;backdrop-filter:blur(24px);display:grid;place-items:center;font-size:20px;box-shadow:0 8px 24px #0002}
+.round:active,.action:active{transform:scale(.96)}
+.main .hint{bottom:92px}
+.sheetback{position:fixed;inset:0;background:#0000;z-index:4;pointer-events:none;transition:background .35s}
+.sheetback.open{background:#0008;pointer-events:auto;backdrop-filter:blur(7px)}
+.sheet{position:fixed;z-index:5;left:0;right:0;bottom:0;max-width:620px;margin:auto;height:min(78dvh,720px);padding:8px 20px calc(20px + env(safe-area-inset-bottom));border:1px solid #ffffff16;border-bottom:0;border-radius:30px 30px 0 0;background:rgba(14,19,29,.94);backdrop-filter:blur(38px) saturate(145%);box-shadow:0 -20px 80px #0007;transform:translateY(105%);transition:transform .42s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.sheet.open{transform:translateY(0)}
+.grabber{width:38px;height:5px;background:#ffffff38;border-radius:9px;margin:0 auto 17px;flex:none}
+.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px;flex:none}
+.sheettitle{font-size:25px;font-weight:650;letter-spacing:-.04em}
+.subtitle{font-size:12px;color:var(--muted);margin-top:4px}
+.add{height:38px;width:38px;border-radius:50%;border:0;background:#dce9ff;color:#13223a;font-size:25px;font-weight:300;display:grid;place-items:center}
+.alarms{overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:9px;padding-bottom:12px}
+.alarm{display:flex;align-items:center;gap:13px;padding:15px 14px;border:1px solid #ffffff0b;border-radius:19px;background:linear-gradient(135deg,#ffffff0b,#ffffff04)}
+.alarmicon{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#ffffff0b;color:#a9caff;font-size:18px;flex:none}
+.alarminfo{min-width:0;flex:1}
+.alarmtime{font-size:28px;line-height:1.1;font-weight:500;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.alarmmeta{font-size:12px;color:#9ba9bf;margin-top:5px}
+.toggle{width:48px;height:29px;border:0;border-radius:99px;background:#424b5c;padding:3px;flex:none;transition:background .2s}
+.toggle:after{content:"";display:block;width:23px;height:23px;border-radius:50%;background:#f6f7fb;box-shadow:0 1px 3px #0004;transition:transform .2s}
+.toggle[aria-checked=true]{background:#3985ff}
+.toggle[aria-checked=true]:after{transform:translateX(19px)}
+.actionrow{display:flex;gap:10px;margin-top:auto;padding-top:10px;flex:none}
+.action{border:1px solid #ffffff14;background:#ffffff0a;border-radius:14px;padding:13px 16px;font-size:14px;flex:1}
+.action.primary{background:#dce9ff;color:#0d1b31;font-weight:650;border-color:transparent}
+.modalback{position:fixed;inset:0;z-index:8;background:#0009;backdrop-filter:blur(8px);display:none;align-items:flex-end}
+.modalback.open{display:flex}
+.modal{width:100%;max-width:620px;margin:auto 0 0;padding:22px 22px calc(24px + env(safe-area-inset-bottom));background:#151c29;border:1px solid #ffffff18;border-radius:28px 28px 0 0}
+.modalhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:21px;font-weight:650}
+.close{border:0;background:#ffffff12;width:34px;height:34px;border-radius:50%;font-size:20px}
+.field{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #ffffff12;color:#dfe6f3}
+.field input[type=time]{background:#ffffff10;color:#fff;border:1px solid #ffffff1c;border-radius:10px;padding:9px}
+.field input[type=text]{width:145px;background:#ffffff10;color:#fff;border:1px solid #ffffff1c;border-radius:10px;padding:9px}
+.field select{background:#252f43;color:#fff;border:1px solid #ffffff20;border-radius:10px;padding:9px}
+.toast{position:fixed;z-index:12;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#e9f1ff;color:#122039;padding:11px 16px;border-radius:99px;font-size:13px;transition:.25s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+body.light{color:#152036}
+body.light .bg{background:radial-gradient(ellipse at 22% 24%,#d6e8ff 0,transparent 42%),linear-gradient(150deg,#f5f8ff,#dce7f7 70%,#edf2fb)}
+body.light .bg:before{border-color:#4f8fe933;box-shadow:0 0 50px #3179e211}
+body.light .date,body.light .status{color:#34455f}
+body.light .clock{background:linear-gradient(180deg,#253956,#426ca5 70%,#477ecb);-webkit-background-clip:text;background-clip:text}
+body.light .greeting{color:#51627c}
+body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
+@media(min-width:600px){.app{padding-left:32px;padding-right:32px}.sheet{border-radius:30px 30px 0 0}}
+@media(max-height:610px){.clock{font-size:clamp(66px,18vw,105px)}.greeting{margin-top:12px}.main .hint{bottom:78px}.sheet{height:85dvh}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="bg"></div>
+  <header class="top">
+    <div class="date" id="date">10月12日 月曜日</div>
+    <div class="status"><span>▰</span><span id="battery">スマホ用</span><span class="bolt">ϟ</span></div>
+  </header>
+  <main class="main" id="main">
+    <div class="clock" id="clock">19:02<span class="seconds" id="seconds">00</span></div>
+    <div class="greeting" id="greeting">夜の時間。ゆっくりいこう。</div>
+    <div class="hint" id="hint"><span>下にスワイプしてアラーム</span><span class="chevron">⌄</span></div>
+  </main>
+  <div class="fabrow">
+    <button class="round" id="themeBtn" aria-label="外観を切り替え">◐</button>
+    <button class="round" id="openAlarms" aria-label="アラーム一覧">◴</button>
+  </div>
+</div>
+<div class="sheetback" id="sheetback"></div>
+<section class="sheet" id="alarmSheet" aria-label="アラーム一覧">
+  <div class="grabber"></div>
+  <div class="sheethead">
+    <div><div class="sheettitle">アラーム</div><div class="subtitle" id="alarmCount">次の予定をチェック</div></div>
+    <button class="add" id="addAlarm" aria-label="アラームを追加">+</button>
+  </div>
+  <div class="alarms" id="alarms"></div>
+  <div class="actionrow"><button class="action" id="settingsBtn">表示設定</button><button class="action primary" id="doneBtn">完了</button></div>
+</section>
+<div class="modalback" id="editBack">
+  <div class="modal">
+    <div class="modalhead"><span id="editTitle">新しいアラーム</span><button class="close" id="closeEdit">×</button></div>
+    <div class="field"><span>時刻</span><input type="time" id="editTime" value="07:00"></div>
+    <div class="field"><span>ラベル</span><input type="text" id="editLabel" maxlength="30" placeholder="アラーム"></div>
+    <div class="field"><span>繰り返し</span><select id="editRepeat"><option value="毎日">毎日</option><option value="平日">平日（月〜金）</option><option value="週末">週末</option><option value="一度だけ">一度だけ</option></select></div>
+    <div class="actionrow"><button class="action" id="deleteAlarm" style="display:none">削除</button><button class="action primary" id="saveAlarm">保存</button></div>
+  </div>
+</div>
+<div class="modalback" id="settingsBack">
+  <div class="modal">
+    <div class="modalhead"><span>表示設定</span><button class="close" id="closeSettings">×</button></div>
+    <div class="field"><span>秒を表示</span><button class="toggle" id="secondsToggle" aria-checked="true" role="switch"></button></div>
+    <div class="field"><span>24時間表示</span><button class="toggle" id="formatToggle" aria-checked="true" role="switch"></button></div>
+    <div class="field"><span>外観</span><select id="appearance"><option value="dark">ダーク</option><option value="light">ライト</option></select></div>
+    <p style="color:#9ba9bf;font-size:12px;line-height:1.7">PWAでは端末やブラウザによって、画面の常時点灯やバックグラウンド動作に制限があります。</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let showSeconds=true,use24=true,editId=null,alarms=[
+{id:1,time:'06:30',label:'目覚まし',repeat:'平日',enabled:true},
+{id:2,time:'07:00',label:'朝のアラーム',repeat:'週末',enabled:false},
+{id:3,time:'18:00',label:'勉強',repeat:'毎日',enabled:false},
+{id:4,time:'21:30',label:'寝る時間',repeat:'毎日',enabled:false}
+];
+const pad=n=>String(n).padStart(2,'0');
+function tick(){
+ const n=new Date(),h=use24?n.getHours():((n.getHours()+11)%12+1);
+ $('clock').innerHTML=`${pad(h)}:${pad(n.getMinutes())}<span class="seconds" id="seconds">${pad(n.getSeconds())}</span>`;
+ $('seconds').style.display=showSeconds?'':'none';
+ $('date').textContent=new Intl.DateTimeFormat('ja-JP',{month:'long',day:'numeric',weekday:'long'}).format(n);
+ $('greeting').textContent=n.getHours()<5?'静かな夜。おやすみ。':n.getHours()<11?'おはよう。今日もいい日に。':n.getHours()<17?'午後もマイペースで。':'夜の時間。ゆっくりいこう。';
+}
+function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),2100)}
+function openSheet(){$('alarmSheet').classList.add('open');$('sheetback').classList.add('open');$('hint').style.opacity='0';renderAlarms()}
+function closeSheet(){$('alarmSheet').classList.remove('open');$('sheetback').classList.remove('open');$('hint').style.opacity='1';closeModals()}
+function closeModals(){$('editBack').classList.remove('open');$('settingsBack').classList.remove('open')}
+function renderAlarms(){
+ $('alarms').innerHTML='';
+ const sorted=[...alarms].sort((a,b)=>a.time.localeCompare(b.time));
+ $('alarmCount').textContent=`${alarms.filter(a=>a.enabled).length}件オン · 時刻をタップして編集`;
+ sorted.forEach(a=>{
+  const el=document.createElement('div');el.className='alarm';
+  const icon=document.createElement('div');icon.className='alarmicon';icon.textContent='◴';
+  const info=document.createElement('div');info.className='alarminfo';
+  const time=document.createElement('div');time.className='alarmtime';time.textContent=a.time;
+  const meta=document.createElement('div');meta.className='alarmmeta';meta.textContent=`${a.repeat} · ${a.label||'アラーム'}`;
+  info.append(time,meta);info.addEventListener('click',()=>editAlarm(a.id));
+  const toggle=document.createElement('button');toggle.className='toggle';toggle.setAttribute('role','switch');toggle.setAttribute('aria-checked',String(a.enabled));toggle.setAttribute('aria-label',a.time+'を'+(a.enabled?'オフ':'オン'));
+  toggle.addEventListener('click',()=>{a.enabled=!a.enabled;renderAlarms()});
+  el.append(icon,info,toggle);$('alarms').append(el);
+ });
+ if(!alarms.length){const p=document.createElement('p');p.style.cssText='color:#9ba9bf;text-align:center;padding:25px';p.textContent='アラームはまだありません。＋から追加しよう。';$('alarms').append(p)}
+}
+function editAlarm(id=null){
+ editId=id;const a=alarms.find(x=>x.id===id);
+ $('editTitle').textContent=a?'アラームを編集':'新しいアラーム';
+ $('editTime').value=a?.time||'07:00';$('editLabel').value=a?.label||'';$('editRepeat').value=a?.repeat||'毎日';
+ $('deleteAlarm').style.display=a?'block':'none';$('editBack').classList.add('open');
+}
+function saveAlarm(){
+ const time=$('editTime').value||'07:00',label=$('editLabel').value.trim()||'アラーム',repeat=$('editRepeat').value;
+ if(editId!==null){const a=alarms.find(x=>x.id===editId);Object.assign(a,{time,label,repeat})}
+ else alarms.push({id:Date.now(),time,label,repeat,enabled:true});
+ $('editBack').classList.remove('open');renderAlarms();toast('アラームを保存しました');
+}
+$('openAlarms').onclick=openSheet;$('doneBtn').onclick=closeSheet;$('sheetback').onclick=closeSheet;
+$('addAlarm').onclick=()=>editAlarm();$('saveAlarm').onclick=saveAlarm;$('closeEdit').onclick=()=> $('editBack').classList.remove('open');
+$('deleteAlarm').onclick=()=>{alarms=alarms.filter(a=>a.id!==editId);$('editBack').classList.remove('open');renderAlarms();toast('アラームを削除しました')};
+$('settingsBtn').onclick=()=>{$('settingsBack').classList.add('open')};$('closeSettings').onclick=()=> $('settingsBack').classList.remove('open');
+$('secondsToggle').onclick=()=>{showSeconds=!showSeconds;$('secondsToggle').setAttribute('aria-checked',String(showSeconds));tick()};
+$('formatToggle').onclick=()=>{use24=!use24;$('formatToggle').setAttribute('aria-checked',String(use24));tick()};
+$('appearance').onchange=()=>document.body.classList.toggle('light',$('appearance').value==='light');
+$('themeBtn').onclick=()=>{document.body.classList.toggle('light');$('appearance').value=document.body.classList.contains('light')?'light':'dark'};
+$('editBack').addEventListener('click',e=>{if(e.target===$('editBack'))$('editBack').classList.remove('open')});
+$('settingsBack').addEventListener('click',e=>{if(e.target===$('settingsBack'))$('settingsBack').classList.remove('open')});
+let startY=0,startX=0;
+$('main').addEventListener('touchstart',e=>{startY=e.touches[0].clientY;startX=e.touches[0].clientX},{passive:true});
+$('main').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)){if(dy>0)openSheet();else closeSheet()}},{passive:true});
+$('main').addEventListener('wheel',e=>{if(e.deltaY>25)openSheet();else if(e.deltaY< -25)closeSheet()},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet()}});
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
