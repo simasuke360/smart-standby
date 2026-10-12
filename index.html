@@ -145,6 +145,119 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
   }
 }
 
+
+/* StandBy fullscreen layout: no labels or floating buttons on the clock face */
+.top,.fabrow,.greeting,.hint{display:none!important}
+.app{padding:0!important}
+.main{width:100%;height:100dvh;min-height:100dvh;justify-content:center;align-items:center;padding:0 2vw;overflow:hidden}
+#clock.clock{
+ display:block!important;max-width:100%;font-size:clamp(104px,31vw, min(31vw, 250px));
+ font-size:min(34vw, 43vh)!important;
+ font-weight:300!important;letter-spacing:-.095em!important;line-height:.88!important;
+ white-space:nowrap!important;transform:none!important;font-variant-numeric:tabular-nums;
+ background:linear-gradient(110deg,#075cff 0%,#1685ff 48%,#20c6ff 100%)!important;
+ -webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;
+ text-shadow:0 0 34px #087dff28!important;
+}
+#clock .seconds{display:none!important}
+@media (orientation:portrait) {
+ .main{padding:0 1vw}
+ #clock.clock{font-size:min(25vw,17vh)!important;letter-spacing:-.09em!important}
+}
+@media (orientation:landscape) {
+ #clock.clock{font-size:min(27vw,42vh)!important;letter-spacing:-.095em!important}
+}
+@media (max-width:390px) and (orientation:portrait) {
+ #clock.clock{font-size:min(24vw,16vh)!important}
+}
+
+
+/* StandBy clock gallery: condensed, angled numerals with tight overlap */
+#clock.clock {
+  font-family: "Arial", "Helvetica Neue", sans-serif !important;
+  font-weight: 800 !important;
+  font-stretch: condensed;
+  font-size: min(34vw, 37vh) !important;
+  letter-spacing: -.145em !important;
+  line-height: .82 !important;
+  transform: skewX(-7deg) scaleX(.94) !important;
+  transform-origin: center;
+  filter: drop-shadow(0 0 26px #147cff24);
+  transition: color .35s, filter .35s, transform .35s;
+}
+#clock.clock .seconds { display:none !important; }
+body.clock-style-1 #clock.clock {
+  font-family: "Arial", "Helvetica Neue", sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -.145em !important;
+  transform: skewX(-7deg) scaleX(.94) !important;
+  background: linear-gradient(105deg,#064cff 0%,#0788ff 52%,#24d1ff 100%) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;
+}
+body.clock-style-2 #clock.clock {
+  font-family: "Helvetica Neue", Arial, sans-serif !important;
+  font-weight: 250 !important;
+  letter-spacing: -.105em !important;
+  transform: scaleX(.96) !important;
+  background: linear-gradient(180deg,#ffffff,#d6deee) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;
+  filter:drop-shadow(0 0 22px #ffffff10);
+}
+body.clock-style-3 #clock.clock {
+  font-family: "Arial Narrow", "Helvetica Neue", sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: -.16em !important;
+  transform: skewX(-10deg) scaleX(.88) !important;
+  background:linear-gradient(110deg,#ff9c43,#ffe0a0 48%,#ffbd64) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;
+  filter:drop-shadow(0 0 28px #ff9c4328);
+}
+body.clock-style-4 #clock.clock {
+  font-family: "Helvetica Neue",Arial,sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -.12em !important;
+  transform: skewX(-4deg) scaleX(.98) !important;
+  background:linear-gradient(110deg,#7cf6c2,#4bd7bf 48%,#a3ffda) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;
+  filter:drop-shadow(0 0 26px #4bd7bf24);
+}
+body.clock-style-5 #clock.clock {
+  font-family: "Helvetica Neue",Arial,sans-serif !important;
+  font-weight: 850 !important;
+  letter-spacing: -.14em !important;
+  transform: skewX(-6deg) scaleX(.92) !important;
+  background:linear-gradient(110deg,#d2a7ff,#9d7bff 48%,#7eb5ff) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;
+  filter:drop-shadow(0 0 28px #9d7bff25);
+}
+#styleName{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;color:#aab9d1;font-size:11px;letter-spacing:.12em;opacity:0;transition:opacity .3s;pointer-events:none}
+#styleName.show{opacity:.8}
+.info-screen{position:fixed;z-index:7;inset:0;background:rgba(5,8,15,.94);backdrop-filter:blur(34px) saturate(140%);padding:calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));overflow:auto;transform:translateY(-105%);transition:transform .48s cubic-bezier(.2,.8,.2,1);overscroll-behavior:contain}
+.info-screen.open{transform:translateY(0)}
+.info-head{display:flex;align-items:center;justify-content:space-between;margin:0 auto 22px;max-width:620px}
+.info-title{font-size:30px;font-weight:650;letter-spacing:-.06em}
+.info-close{width:42px;height:42px;border-radius:50%;border:1px solid #ffffff1c;background:#ffffff0d;font-size:22px}
+.info-grid{max-width:620px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-card{min-height:145px;border:1px solid #ffffff15;border-radius:25px;padding:18px;background:linear-gradient(145deg,#ffffff12,#ffffff05);box-shadow:0 15px 45px #0002}
+.info-card.wide{grid-column:1/-1}
+.info-kicker{font-size:11px;letter-spacing:.12em;color:#8fa7c9;text-transform:uppercase;margin-bottom:12px}
+.weather-temp{font-size:46px;line-height:1;font-weight:300;letter-spacing:-.06em}
+.weather-desc{font-size:13px;color:#b3c1d6;margin-top:9px}
+.weather-meta{font-size:12px;color:#9aaac2;margin-top:13px;line-height:1.8}
+.news-list{display:flex;flex-direction:column;gap:0}
+.news-link{display:block;text-decoration:none;color:#eef4ff;padding:13px 0;border-top:1px solid #ffffff12;font-size:14px;line-height:1.5}
+.news-link:first-child{border-top:0;padding-top:0}
+.news-link span{display:block;color:#91a4c2;font-size:11px;margin-top:4px}
+.info-foot{max-width:620px;margin:18px auto 0;color:#71819a;font-size:11px;line-height:1.7}
+@media(max-width:600px){
+ #clock.clock{font-size:min(34vw,37vh)!important;letter-spacing:-.145em!important}
+ .info-screen{padding-left:15px;padding-right:15px}
+ .info-title{font-size:28px}
+ .info-card{padding:15px;min-height:132px;border-radius:21px}
+ .weather-temp{font-size:40px}
+}
+@media(max-width:360px){#clock.clock{font-size:min(32vw,35vh)!important;letter-spacing:-.13em!important}.info-grid{gap:8px}}
+
 </style>
 </head>
 <body>
@@ -152,7 +265,7 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
   <div class="bg"></div>
   <header class="top">
     <div class="date" id="date">10月12日 月曜日</div>
-    <div class="status"><span>▰</span><button id="soundEnable" style="border:1px solid #ffffff22;background:#ffffff0b;color:inherit;border-radius:99px;padding:6px 9px;font-size:11px">音を有効化</button></div>
+    <div class="status"><span>▰</span></div>
   </header>
   <main class="main" id="main">
     <div class="clock" id="clock">19:02<span class="seconds" id="seconds">00</span></div>
@@ -164,6 +277,40 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
     <button class="round" id="openAlarms" aria-label="アラーム一覧">◴</button>
   </div>
 </div>
+
+<div id="styleName" aria-live="polite">BLUE / STANDBY</div>
+<section class="info-screen" id="infoScreen" aria-label="情報パネル">
+  <div class="info-head"><div><div class="info-title">今日の情報</div><div style="color:#91a3bd;font-size:12px;margin-top:5px">天気・ニュース・今日の予定</div></div><button class="info-close" id="closeInfo" aria-label="閉じる">×</button></div>
+  <div class="info-grid">
+    <article class="info-card">
+      <div class="info-kicker">Weather / 現在の天気</div>
+      <div class="weather-temp" id="weatherTemp">--°</div>
+      <div class="weather-desc" id="weatherDesc">天気を取得しています…</div>
+      <div class="weather-meta" id="weatherMeta">位置情報の許可が必要な場合があります</div>
+    </article>
+    <article class="info-card">
+      <div class="info-kicker">Today / 今日</div>
+      <div id="todayDate" style="font-size:19px;font-weight:600;line-height:1.4">----</div>
+      <div id="todayDay" style="font-size:13px;color:#a9b8ce;margin-top:7px">日付を確認中</div>
+      <div id="todayClock" style="font-size:28px;letter-spacing:-.06em;margin-top:13px;font-variant-numeric:tabular-nums">--:--</div>
+    </article>
+    <article class="info-card wide">
+      <div class="info-kicker">News / ニュース</div>
+      <div class="news-list">
+        <a class="news-link" href="https://www3.nhk.or.jp/news/" target="_blank" rel="noopener">NHK NEWS WEB <span>最新ニュースを開く ↗</span></a>
+        <a class="news-link" href="https://news.yahoo.co.jp/" target="_blank" rel="noopener">Yahoo!ニュース <span>国内・国際・エンタメ ↗</span></a>
+        <a class="news-link" href="https://www3.nhk.or.jp/news/easy/" target="_blank" rel="noopener">NHK NEWS WEB EASY <span>やさしい日本語のニュース ↗</span></a>
+      </div>
+    </article>
+    <article class="info-card wide">
+      <div class="info-kicker">StandBy / アラーム</div>
+      <div id="nextAlarm" style="font-size:16px;line-height:1.5">オンになっているアラームを確認中…</div>
+      <div style="color:#9aaac2;font-size:12px;margin-top:7px">時計画面に戻るには下へスワイプ、または × をタップ。</div>
+    </article>
+  </div>
+  <div class="info-foot">天気は位置情報を許可した場合に取得します。ニュースは各ニュースサイトへのリンクです。</div>
+</section>
+
 <div class="sheetback" id="sheetback"></div>
 <section class="sheet" id="alarmSheet" aria-label="アラーム一覧">
   <div class="grabber"></div>
@@ -189,18 +336,20 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
     <div class="field"><span>秒を表示</span><button class="toggle" id="secondsToggle" aria-checked="true" role="switch"></button></div>
     <div class="field"><span>24時間表示</span><button class="toggle" id="formatToggle" aria-checked="true" role="switch"></button></div>
     <div class="field"><span>外観</span><select id="appearance"><option value="dark">ダーク</option><option value="light">ライト</option></select></div>
+    <div class="field"><span>アラーム音を有効化</span><button class="toggle" id="soundToggle" role="switch" aria-checked="false" aria-label="アラーム音を有効化"></button></div>
+    <p id="soundStatus" style="color:#9ba9bf;font-size:12px;line-height:1.7;margin-top:12px">最初にここをオンにすると、ブラウザでアラーム音を再生できるようになります。</p>
     <p style="color:#9ba9bf;font-size:12px;line-height:1.7">PWAでは端末やブラウザによって、画面の常時点灯やバックグラウンド動作に制限があります。</p>
   </div>
 </div>
 <div class="ringback" id="ringback" role="alertdialog" aria-modal="true" aria-labelledby="ringlabel">
   <div class="ringcard">
-    <div class="ringeyebrow">ALARM · STANDBY</div>
+    <div class="ringeyebrow">ALARM</div>
     <div class="ringicon" aria-hidden="true">◴</div>
     <div class="ringtime" id="ringtime">07:00</div>
     <div class="ringlabel" id="ringlabel">目覚まし</div>
     <div class="ringsub">アラームの時間です</div>
     <div class="ringactions"><button class="ringbtn" id="snoozeBtn">5分後に再通知</button><button class="ringbtn stop" id="stopBtn">停止</button></div>
-    <div class="soundhint" id="soundhint">ページを開いたままにすると動作します</div>
+    <div class="soundhint" id="soundhint">停止するにはボタンをタップ</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -212,6 +361,14 @@ let showSeconds=true,use24=true,editId=null,alarms=[
 {id:3,time:'18:00',label:'勉強',repeat:'毎日',enabled:false},
 {id:4,time:'21:30',label:'寝る時間',repeat:'毎日',enabled:false}
 ];
+try{
+ const saved=JSON.parse(localStorage.getItem('standby-alarms-v2')||'null');
+ if(Array.isArray(saved))alarms=saved;
+ const prefs=JSON.parse(localStorage.getItem('standby-prefs-v2')||'{}');
+ showSeconds=prefs.showSeconds!==false;use24=prefs.use24!==false;
+}catch(e){}
+function saveAlarms(){try{localStorage.setItem('standby-alarms-v2',JSON.stringify(alarms))}catch(e){}}
+function savePrefs(){try{localStorage.setItem('standby-prefs-v2',JSON.stringify({showSeconds,use24,soundEnabled:!!soundEnabled,light:document.body.classList.contains('light')}))}catch(e){}}
 const pad=n=>String(n).padStart(2,'0');
 function tick(){
  const n=new Date(),h=use24?n.getHours():((n.getHours()+11)%12+1);
@@ -236,7 +393,7 @@ function renderAlarms(){
   const meta=document.createElement('div');meta.className='alarmmeta';meta.textContent=`${a.repeat} · ${a.label||'アラーム'}`;
   info.append(time,meta);info.addEventListener('click',()=>editAlarm(a.id));
   const toggle=document.createElement('button');toggle.className='toggle';toggle.setAttribute('role','switch');toggle.setAttribute('aria-checked',String(a.enabled));toggle.setAttribute('aria-label',a.time+'を'+(a.enabled?'オフ':'オン'));
-  toggle.addEventListener('click',()=>{a.enabled=!a.enabled;renderAlarms()});
+  toggle.addEventListener('click',()=>{a.enabled=!a.enabled;saveAlarms();renderAlarms()});
   el.append(icon,info,toggle);$('alarms').append(el);
  });
  if(!alarms.length){const p=document.createElement('p');p.style.cssText='color:#9ba9bf;text-align:center;padding:25px';p.textContent='アラームはまだありません。＋から追加しよう。';$('alarms').append(p)}
@@ -251,26 +408,78 @@ function saveAlarm(){
  const time=$('editTime').value||'07:00',label=$('editLabel').value.trim()||'アラーム',repeat=$('editRepeat').value;
  if(editId!==null){const a=alarms.find(x=>x.id===editId);Object.assign(a,{time,label,repeat})}
  else alarms.push({id:Date.now(),time,label,repeat,enabled:true});
- $('editBack').classList.remove('open');renderAlarms();toast('アラームを保存しました');
+ $('editBack').classList.remove('open');saveAlarms();renderAlarms();toast('アラームを保存しました');
 }
 $('openAlarms').onclick=openSheet;$('doneBtn').onclick=closeSheet;$('sheetback').onclick=closeSheet;
 $('addAlarm').onclick=()=>editAlarm();$('saveAlarm').onclick=saveAlarm;$('closeEdit').onclick=()=> $('editBack').classList.remove('open');
-$('deleteAlarm').onclick=()=>{alarms=alarms.filter(a=>a.id!==editId);$('editBack').classList.remove('open');renderAlarms();toast('アラームを削除しました')};
+$('deleteAlarm').onclick=()=>{alarms=alarms.filter(a=>a.id!==editId);$('editBack').classList.remove('open');saveAlarms();renderAlarms();toast('アラームを削除しました')};
 $('settingsBtn').onclick=()=>{$('settingsBack').classList.add('open')};$('closeSettings').onclick=()=> $('settingsBack').classList.remove('open');
-$('secondsToggle').onclick=()=>{showSeconds=!showSeconds;$('secondsToggle').setAttribute('aria-checked',String(showSeconds));tick()};
-$('formatToggle').onclick=()=>{use24=!use24;$('formatToggle').setAttribute('aria-checked',String(use24));tick()};
-$('appearance').onchange=()=>document.body.classList.toggle('light',$('appearance').value==='light');
-$('themeBtn').onclick=()=>{document.body.classList.toggle('light');$('appearance').value=document.body.classList.contains('light')?'light':'dark'};
+$('secondsToggle').onclick=()=>{showSeconds=!showSeconds;$('secondsToggle').setAttribute('aria-checked',String(showSeconds));savePrefs();tick()};
+$('formatToggle').onclick=()=>{use24=!use24;$('formatToggle').setAttribute('aria-checked',String(use24));savePrefs();tick()};
+$('appearance').onchange=()=>{document.body.classList.toggle('light',$('appearance').value==='light');savePrefs()};
+$('themeBtn').onclick=()=>{document.body.classList.toggle('light');$('appearance').value=document.body.classList.contains('light')?'light':'dark';savePrefs()};
 $('editBack').addEventListener('click',e=>{if(e.target===$('editBack'))$('editBack').classList.remove('open')});
 $('settingsBack').addEventListener('click',e=>{if(e.target===$('settingsBack'))$('settingsBack').classList.remove('open')});
-let startY=0,startX=0;
+let startY=0,startX=0,clockStyle=1,styleToastTimer=null;
+const styleNames=['BLUE / STANDBY','PURE / MINIMAL','AMBER / RETRO','MINT / SOFT','VIOLET / GLASS'];
+function setClockStyle(n,show=true){
+ clockStyle=((n-1+styleNames.length)%styleNames.length)+1;
+ for(let i=1;i<=styleNames.length;i++)document.body.classList.remove('clock-style-'+i);
+ document.body.classList.add('clock-style-'+clockStyle);
+ $('styleName').textContent=styleNames[clockStyle-1];
+ if(show){
+  $('styleName').classList.add('show');clearTimeout(styleToastTimer);
+  styleToastTimer=setTimeout(()=>$('styleName').classList.remove('show'),1100);
+ }
+ try{localStorage.setItem('standby-clock-style',String(clockStyle))}catch(e){}
+}
+function openInfo(){closeSheet();$('infoScreen').classList.add('open');refreshInfo();if(navigator.vibrate)navigator.vibrate(8)}
+function closeInfo(){$('infoScreen').classList.remove('open')}
 $('main').addEventListener('touchstart',e=>{startY=e.touches[0].clientY;startX=e.touches[0].clientX},{passive:true});
-$('main').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)){if(dy>0)openSheet();else closeSheet()}},{passive:true});
-$('main').addEventListener('wheel',e=>{if(e.deltaY>25)openSheet();else if(e.deltaY< -25)closeSheet()},{passive:true});
+$('main').addEventListener('touchend',e=>{
+ const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;
+ if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)){setClockStyle(clockStyle+(dx>0?1:-1));return}
+ if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)){if(dy>0)openSheet();else openInfo()}
+},{passive:true});
+$('infoScreen').addEventListener('touchstart',e=>{startY=e.touches[0].clientY;startX=e.touches[0].clientX},{passive:true});
+$('infoScreen').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;if(dy>65&&Math.abs(dy)>Math.abs(dx))closeInfo()},{passive:true});
+$('main').addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>25)setClockStyle(clockStyle+(e.deltaX<0?1:-1));else if(e.deltaY>25)openSheet();else if(e.deltaY< -25)openInfo()},{passive:true});
+$('closeInfo').onclick=closeInfo;
+function weatherLabel(code){
+ if(code===0)return '快晴';if([1,2].includes(code))return '晴れ・一部くもり';if(code===3)return 'くもり';
+ if([45,48].includes(code))return '霧';if([51,53,55,56,57].includes(code))return '霧雨';
+ if([61,63,65,66,67,80,81,82].includes(code))return '雨';if([71,73,75,77,85,86].includes(code))return '雪';if([95,96,99].includes(code))return '雷雨';return '天気情報';
+}
+async function loadWeather(lat,lon,label){
+ try{
+  const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`);
+  if(!r.ok)throw new Error('weather');
+  const d=await r.json(),c=d.current;
+  $('weatherTemp').textContent=Math.round(c.temperature_2m)+'°';
+  $('weatherDesc').textContent=weatherLabel(c.weather_code)+' · '+label;
+  $('weatherMeta').textContent=`体感 ${Math.round(c.apparent_temperature)}° · 湿度 ${c.relative_humidity_2m}%\n風速 ${Math.round(c.wind_speed_10m)} km/h`;
+ }catch(e){$('weatherDesc').textContent='天気を取得できませんでした';$('weatherMeta').textContent='通信環境を確認して再度開いてください'}
+}
+function refreshInfo(){
+ const now=new Date();
+ $('todayDate').textContent=new Intl.DateTimeFormat('ja-JP',{month:'long',day:'numeric'}).format(now);
+ $('todayDay').textContent=new Intl.DateTimeFormat('ja-JP',{weekday:'long'}).format(now);
+ $('todayClock').textContent=new Intl.DateTimeFormat('ja-JP',{hour:'2-digit',minute:'2-digit',hour12:false}).format(now);
+ const upcoming=alarms.filter(a=>a.enabled).sort((a,b)=>a.time.localeCompare(b.time));
+ $('nextAlarm').textContent=upcoming.length?`次のアラーム：${upcoming[0].time}「${upcoming[0].label||'アラーム'}」`:'オンのアラームはありません';
+ if(navigator.geolocation){
+  $('weatherDesc').textContent='位置情報を確認しています…';
+  navigator.geolocation.getCurrentPosition(pos=>loadWeather(pos.coords.latitude,pos.coords.longitude,'現在地'),()=>{
+   // Chiba/Tokyo-area fallback is deliberately approximate, clearly labelled.
+   loadWeather(35.68,139.76,'東京（概算）');
+  },{timeout:6500,maximumAge:600000});
+ }else{loadWeather(35.68,139.76,'東京（概算）')}
+}
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet()}});
 
 // Alarm playback: browsers require a user gesture to unlock audio.
-let audioCtx=null, alarmOscillators=[], ringActiveId=null, lastMinuteKey="", snoozeTimeout=null;
+let audioCtx=null, alarmOscillators=[], ringActiveId=null, lastMinuteKey="", snoozeTimeout=null, soundEnabled=false;
 const firedKeys=new Set();
 function unlockAudio(){
  try{
@@ -278,16 +487,18 @@ function unlockAudio(){
   if(!AC){toast('このブラウザでは音声を使えません');return}
   if(!audioCtx)audioCtx=new AC();
   if(audioCtx.state==='suspended')audioCtx.resume();
-  $('soundEnable').textContent='音声OK ✓';
-  $('soundEnable').style.borderColor='#70d5a4';
-  $('soundhint').textContent='音声を有効化しました';
+  soundEnabled=true;
+  $('soundToggle').setAttribute('aria-checked','true');
+  $('soundStatus').textContent='アラーム音は有効です。ページを開いている間に鳴ります。';
+  $('soundStatus').style.color='#70d5a4';
+  savePrefs();
   // A very quiet, short oscillator primes the audio path without an audible beep.
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
   g.gain.value=0.00001;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.03);
  }catch(e){toast('音声を開始できませんでした')}
 }
 function playAlarmSound(){
- if(!audioCtx||audioCtx.state!=='running')return;
+ if(!soundEnabled||!audioCtx||audioCtx.state!=='running')return;
  stopAlarmSound();
  const playPulse=(when,freq,duration=.28)=>{
   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
@@ -327,12 +538,12 @@ function showRingingAlarm(a){
  $('ringtime').textContent=a.time;
  $('ringlabel').textContent=a.label||'アラーム';
  $('ringback').classList.add('open');
- $('soundhint').textContent=audioCtx&&audioCtx.state==='running'?'タップして停止できます':'音が鳴らない場合は「音を有効化」をタップ';
+ $('soundhint').textContent=soundEnabled&&audioCtx&&audioCtx.state==='running'?'停止するにはボタンをタップ':'設定でアラーム音を有効にしてください';
  document.title='⏰ '+(a.label||'アラーム')+' — Standby';
  if(navigator.vibrate)navigator.vibrate([350,180,350,180,700]);
  playAlarmSound();
  if(a.repeat==='一度だけ')a.enabled=false;
- renderAlarms();
+ saveAlarms();renderAlarms();
 }
 function dismissAlarm(){
  ringActiveId=null;stopAlarmSound();
@@ -351,7 +562,10 @@ function checkAlarms(){
   showRingingAlarm(a);
  }
 }
-$('soundEnable').addEventListener('click',unlockAudio);
+$('soundToggle').addEventListener('click',()=>{
+ if(soundEnabled){soundEnabled=false;$('soundToggle').setAttribute('aria-checked','false');$('soundStatus').textContent='アラーム音はオフです。';$('soundStatus').style.color='#9ba9bf';savePrefs();return}
+ unlockAudio();
+});
 $('stopBtn').addEventListener('click',dismissAlarm);
 $('snoozeBtn').addEventListener('click',()=>{
  const old=alarms.find(a=>a.id===ringActiveId);
@@ -360,12 +574,23 @@ $('snoozeBtn').addEventListener('click',()=>{
  const next=new Date(Date.now()+5*60*1000);
  const time=`${pad(next.getHours())}:${pad(next.getMinutes())}`;
  const snooze={id:Date.now(),time,label:(old.label||'アラーム')+'（再通知）',repeat:'一度だけ',enabled:true};
- alarms.push(snooze);toast('5分後に再通知します');
+ alarms.push(snooze);saveAlarms();toast('5分後に再通知します');
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ringActiveId)playAlarmSound()});
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-tick();checkAlarms();setInterval(()=>{tick();checkAlarms()},1000);
+try{
+ const prefs=JSON.parse(localStorage.getItem('standby-prefs-v2')||'{}');
+ showSeconds=prefs.showSeconds!==false;use24=prefs.use24!==false;soundEnabled=prefs.soundEnabled===true;
+ $('soundToggle').setAttribute('aria-checked',String(soundEnabled));
+ $('soundStatus').textContent=soundEnabled?'アラーム音は有効です。必要ならここをタップして音声を再許可できます。':'最初にここをオンにすると、ブラウザでアラーム音を再生できるようになります。';
+ $('secondsToggle').setAttribute('aria-checked',String(showSeconds));
+ $('formatToggle').setAttribute('aria-checked',String(use24));
+ if(prefs.light){document.body.classList.add('light');$('appearance').value='light'}
+}catch(e){}
+try{setClockStyle(Number(localStorage.getItem('standby-clock-style')||'1'),false)}catch(e){setClockStyle(1,false)}
+tick();checkAlarms();setInterval(()=>{tick();checkAlarms();if($('infoScreen').classList.contains('open'))refreshInfoClockOnly()},1000);
+function refreshInfoClockOnly(){const n=new Date();$('todayClock').textContent=new Intl.DateTimeFormat('ja-JP',{hour:'2-digit',minute:'2-digit',hour12:false}).format(n)}
 </script>
 </body>
 </html>
