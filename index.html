@@ -75,6 +75,28 @@ body.light .date,body.light .status{color:#34455f}
 body.light .clock{background:linear-gradient(180deg,#253956,#426ca5 70%,#477ecb);-webkit-background-clip:text;background-clip:text}
 body.light .greeting{color:#51627c}
 body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
+
+/* StandBy-style ringing alarm */
+.ringback{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(2,5,12,.74);backdrop-filter:blur(30px) saturate(140%);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+.ringback.open{opacity:1;visibility:visible}
+.ringcard{width:min(100%,480px);min-height:min(78dvh,650px);border:1px solid #ffffff22;border-radius:34px;padding:clamp(24px,6vh,52px) 24px 26px;background:linear-gradient(155deg,rgba(39,54,79,.92),rgba(10,15,27,.94));box-shadow:0 30px 120px #0009;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;transform:translateY(22px) scale(.97);transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.ringback.open .ringcard{transform:translateY(0) scale(1)}
+.ringcard:before,.ringcard:after{content:"";position:absolute;pointer-events:none;border:1px solid #8dbbff26;border-radius:50%;width:125%;height:64%;transform:rotate(-24deg);animation:ringOrbit 8s linear infinite}
+.ringcard:after{width:145%;height:76%;animation-duration:12s;animation-direction:reverse;border-color:#ffffff12}
+@keyframes ringOrbit{to{transform:rotate(336deg)}}
+.ringeyebrow{position:relative;z-index:1;color:#a9caff;font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:25px}
+.ringicon{position:relative;z-index:1;width:76px;height:76px;border-radius:26px;display:grid;place-items:center;background:linear-gradient(145deg,#a9ceff,#4b82db);color:#10213d;font-size:34px;box-shadow:0 0 0 12px #8dbbff12,0 0 60px #5c9dff4d;animation:ringPulse 1.8s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 9px #8dbbff10,0 0 42px #5c9dff38}50%{transform:scale(1.06);box-shadow:0 0 0 18px #8dbbff06,0 0 70px #5c9dff70}}
+.ringtime{position:relative;z-index:1;margin-top:28px;font-size:clamp(68px,18vw,112px);line-height:1;font-weight:250;letter-spacing:-.085em;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#fff,#bcd7ff 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ringlabel{position:relative;z-index:1;margin-top:15px;font-size:clamp(18px,5vw,24px);font-weight:550;letter-spacing:-.025em;text-align:center;overflow-wrap:anywhere}
+.ringsub{position:relative;z-index:1;color:#a8b7cf;font-size:13px;margin-top:9px}
+.ringactions{position:relative;z-index:1;display:flex;gap:12px;width:100%;margin-top:auto;padding-top:42px}
+.ringbtn{flex:1;min-height:58px;border:1px solid #ffffff24;border-radius:19px;background:#ffffff0d;color:#fff;font-size:15px;font-weight:600;backdrop-filter:blur(20px)}
+.ringbtn.stop{background:#e5efff;color:#14223a;border-color:transparent;box-shadow:0 8px 28px #8dbbff25}
+.ringbtn:active{transform:scale(.97)}
+.soundhint{font-size:11px;color:#8c9cb5;text-align:center;margin-top:14px;position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){.ringcard:before,.ringcard:after,.ringicon{animation:none}}
+
 @media(min-width:600px){.app{padding-left:32px;padding-right:32px}.sheet{border-radius:30px 30px 0 0}}
 @media(max-height:610px){.clock{font-size:clamp(66px,18vw,105px)}.greeting{margin-top:12px}.main .hint{bottom:78px}.sheet{height:85dvh}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
@@ -85,7 +107,7 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
   <div class="bg"></div>
   <header class="top">
     <div class="date" id="date">10月12日 月曜日</div>
-    <div class="status"><span>▰</span><span id="battery">スマホ用</span><span class="bolt">ϟ</span></div>
+    <div class="status"><span>▰</span><button id="soundEnable" style="border:1px solid #ffffff22;background:#ffffff0b;color:inherit;border-radius:99px;padding:6px 9px;font-size:11px">音を有効化</button></div>
   </header>
   <main class="main" id="main">
     <div class="clock" id="clock">19:02<span class="seconds" id="seconds">00</span></div>
@@ -123,6 +145,17 @@ body.light .round{background:#ffffff80;border-color:#ffffffa0;color:#1c2b45}
     <div class="field"><span>24時間表示</span><button class="toggle" id="formatToggle" aria-checked="true" role="switch"></button></div>
     <div class="field"><span>外観</span><select id="appearance"><option value="dark">ダーク</option><option value="light">ライト</option></select></div>
     <p style="color:#9ba9bf;font-size:12px;line-height:1.7">PWAでは端末やブラウザによって、画面の常時点灯やバックグラウンド動作に制限があります。</p>
+  </div>
+</div>
+<div class="ringback" id="ringback" role="alertdialog" aria-modal="true" aria-labelledby="ringlabel">
+  <div class="ringcard">
+    <div class="ringeyebrow">ALARM · STANDBY</div>
+    <div class="ringicon" aria-hidden="true">◴</div>
+    <div class="ringtime" id="ringtime">07:00</div>
+    <div class="ringlabel" id="ringlabel">目覚まし</div>
+    <div class="ringsub">アラームの時間です</div>
+    <div class="ringactions"><button class="ringbtn" id="snoozeBtn">5分後に再通知</button><button class="ringbtn stop" id="stopBtn">停止</button></div>
+    <div class="soundhint" id="soundhint">ページを開いたままにすると動作します</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -190,8 +223,104 @@ $('main').addEventListener('touchstart',e=>{startY=e.touches[0].clientY;startX=e
 $('main').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)){if(dy>0)openSheet();else closeSheet()}},{passive:true});
 $('main').addEventListener('wheel',e=>{if(e.deltaY>25)openSheet();else if(e.deltaY< -25)closeSheet()},{passive:true});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet()}});
+
+// Alarm playback: browsers require a user gesture to unlock audio.
+let audioCtx=null, alarmOscillators=[], ringActiveId=null, lastMinuteKey="", snoozeTimeout=null;
+const firedKeys=new Set();
+function unlockAudio(){
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC){toast('このブラウザでは音声を使えません');return}
+  if(!audioCtx)audioCtx=new AC();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  $('soundEnable').textContent='音声OK ✓';
+  $('soundEnable').style.borderColor='#70d5a4';
+  $('soundhint').textContent='音声を有効化しました';
+  // A very quiet, short oscillator primes the audio path without an audible beep.
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  g.gain.value=0.00001;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.03);
+ }catch(e){toast('音声を開始できませんでした')}
+}
+function playAlarmSound(){
+ if(!audioCtx||audioCtx.state!=='running')return;
+ stopAlarmSound();
+ const playPulse=(when,freq,duration=.28)=>{
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type='sine';o.frequency.setValueAtTime(freq,when);
+  g.gain.setValueAtTime(.0001,when);g.gain.exponentialRampToValueAtTime(.22,when+.035);
+  g.gain.setValueAtTime(.18,when+duration-.06);g.gain.exponentialRampToValueAtTime(.0001,when+duration);
+  o.connect(g);g.connect(audioCtx.destination);o.start(when);o.stop(when+duration+.02);
+  alarmOscillators.push(o);
+ };
+ const now=audioCtx.currentTime;
+ // Gentle two-tone repeating chime.
+ for(let cycle=0;cycle<4;cycle++){
+  playPulse(now+cycle*.95,740,.34);
+  playPulse(now+cycle*.95+.38,988,.38);
+ }
+ soundLoop=setInterval(()=>{
+  if(!ringActiveId){clearInterval(soundLoop);return}
+  if(audioCtx&&audioCtx.state==='running'){
+   const t=audioCtx.currentTime;playPulse(t,740,.34);playPulse(t+.38,988,.38);
+  }
+ },3800);
+}
+let soundLoop=null;
+function stopAlarmSound(){
+ if(soundLoop){clearInterval(soundLoop);soundLoop=null}
+ alarmOscillators.forEach(o=>{try{o.stop()}catch(e){}});
+ alarmOscillators=[];
+}
+function shouldRingToday(a, now){
+ const day=now.getDay();
+ if(a.repeat==='平日'&&(day===0||day===6))return false;
+ if(a.repeat==='週末'&&(day!==0&&day!==6))return false;
+ return true;
+}
+function showRingingAlarm(a){
+ ringActiveId=a.id;
+ $('ringtime').textContent=a.time;
+ $('ringlabel').textContent=a.label||'アラーム';
+ $('ringback').classList.add('open');
+ $('soundhint').textContent=audioCtx&&audioCtx.state==='running'?'タップして停止できます':'音が鳴らない場合は「音を有効化」をタップ';
+ document.title='⏰ '+(a.label||'アラーム')+' — Standby';
+ if(navigator.vibrate)navigator.vibrate([350,180,350,180,700]);
+ playAlarmSound();
+ if(a.repeat==='一度だけ')a.enabled=false;
+ renderAlarms();
+}
+function dismissAlarm(){
+ ringActiveId=null;stopAlarmSound();
+ if(navigator.vibrate)navigator.vibrate(0);
+ $('ringback').classList.remove('open');
+ document.title='Standby';
+}
+function checkAlarms(){
+ const now=new Date(),key=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}-${pad(now.getHours())}:${pad(now.getMinutes())}`;
+ if(key===lastMinuteKey)return;
+ lastMinuteKey=key;
+ const hm=`${pad(now.getHours())}:${pad(now.getMinutes())}`;
+ const a=alarms.find(x=>x.enabled&&x.time===hm&&shouldRingToday(x,now)&&!firedKeys.has(`${x.id}:${key}`));
+ if(a){
+  firedKeys.add(`${a.id}:${key}`);
+  showRingingAlarm(a);
+ }
+}
+$('soundEnable').addEventListener('click',unlockAudio);
+$('stopBtn').addEventListener('click',dismissAlarm);
+$('snoozeBtn').addEventListener('click',()=>{
+ const old=alarms.find(a=>a.id===ringActiveId);
+ dismissAlarm();
+ if(!old)return;
+ const next=new Date(Date.now()+5*60*1000);
+ const time=`${pad(next.getHours())}:${pad(next.getMinutes())}`;
+ const snooze={id:Date.now(),time,label:(old.label||'アラーム')+'（再通知）',repeat:'一度だけ',enabled:true};
+ alarms.push(snooze);toast('5分後に再通知します');
+});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ringActiveId)playAlarmSound()});
+
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-tick();setInterval(tick,1000);
+tick();checkAlarms();setInterval(()=>{tick();checkAlarms()},1000);
 </script>
 </body>
 </html>
